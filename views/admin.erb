@@ -39,7 +39,11 @@
 								<%= me.updates.count %>
 							</td>
 							<td>
-								<a href='#' class='btn'>Close Issue</a>
+								<% if me.closed_at.nil? %>
+									<a href="/maintenance_events/<%= me.id %>/close" class='btn btn-danger'>Close Issue</a>
+								<% else %>
+									<a href="/maintenance_events/<%= me.id %>/open" class='btn btn-info'>Re-open Issue</a>
+								<% end %>
 							</td>
 							<td>
 								<a class="btn" data-toggle="modal" href="#myModal" >New Live Update</a>

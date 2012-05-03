@@ -50,7 +50,32 @@ post '/maintenance_events' do
   flash[:notice] = "You had an error in your form, try again."
   redirect to('/maintenance_events')
  end
+end
 
+get '/maintenance_events/:id/close' do
+  protected!
+  @maintenance_event = MaintenanceEvent.get(params[:id])
+  @maintenance_event.closed_at = Time.now
+  if @maintenance_event.save
+    flash[:notice] = "Issue closed"
+    redirect to('/maintenance_events')
+  else
+    flash[:notice] = "Couldn't close the issue"
+    redirect to('/maintenance_events')
+  end
+end
+
+get '/maintenance_events/:id/open' do
+  protected!
+  @maintenance_event = MaintenanceEvent.get(params[:id])
+  @maintenance_event.closed_at = nil
+  if @maintenance_event.save
+    flash[:notice] = "Issue re-opened!"
+    redirect to('/maintenance_events')
+  else
+    flash[:notice] = "Couldn't re-open the issue"
+    redirect to('/maintenance_events')
+  end
 end
 
 get '/log' do
