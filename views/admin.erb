@@ -1,0 +1,76 @@
+<% if flash[:notice]%>
+	<div class='alert alert-info'>
+		<%= flash[:notice] %>
+	</div>
+<% end %>
+
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab1" data-toggle="tab">Section 1</a></li>
+		<li><a href="#tab2" data-toggle="tab">New Event</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab1">
+			<h1>Existing Maintenance Events</h1>
+			<table class='table table-striped'>
+				<thead>
+					<tr>
+						<th>Title</th>
+						<th>Created</th>
+						<th>Last Updated</th>
+						<th>Live Updates</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @maintenance_events.each do |me| %>
+						<tr>
+							<td>
+								<%= me.title %>
+							</td>
+							<td>
+								<%= timeago(me.created_at) %>
+							</td>
+							<td>
+								<%= timeago(me.updated_at) %>
+							</td>
+							<td>
+								<%= me.updates.count %>
+							</td>
+							<td>
+								<a href='#' class='btn'>Close Issue</a>
+							</td>
+							<td>
+								<a class="btn" data-toggle="modal" href="#myModal" >New Live Update</a>
+							</td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+		<div class="tab-pane" id="tab2">
+			<h1>New Maintenance Event</h1>
+			<form class='well' action='/maintenance_events' method='POST'>
+				<fieldset>
+					<div class='control-group'>
+						<input class='input-xlarge' type='text' placeholder='Event Title' name="maintenance_event[title]"></input>
+					</div>
+					<div class='control-group'>
+						<textarea class='input-xlarge' rows='10' placeholder='Be descriptive about the problem...' name="maintenance_event[text]" ></textarea>
+					</div>
+					<div class="form-actions">
+						<button class='btn btn-primary' type='submit'>Save Changes</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<a href='/' class='btn'>To Site Home</a>
+<%= erb :update_form %>

@@ -1,0 +1,19 @@
+<div class='row-fluid'>
+	<div class='hero-unit'>
+		<h1>Sorry.</h1>
+		<p>This site is undergoing maintenance.</p>
+	</div>
+</div>
+<div class='row-fluid'>
+	<div class='span4'>
+		<% @maintenance_events.each do |maintenance_event| %>
+			<%= erb :maintenance_event, :locals => {:maintenance_event => maintenance_event} %>
+		<% end %>
+	</div>
+	<div class='span8'>
+		<h3>Live Updates</h3>
+		<% @updates.each do |update| %>
+			<%= erb :update, :locals => {:update => update} %>
+		<% end %>
+	</div>
+</div>

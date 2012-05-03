@@ -1,0 +1,8 @@
+<div class='maintenance_event <%= 'closed' unless maintenance_event.closed_at.nil? %>'>
+	<h3><%= maintenance_event.title %></h3>
+	<i><%= nicetime(maintenance_event.created_at) %></i>
+	<% unless maintenance_event.closed_at.nil? %>
+		<p><b>Event Closed: <%= nicetime(maintenance_event.closed_at) %></b></p>
+	<% end %>
+	<p><%= maintenance_event.text %></p>
+</div>
