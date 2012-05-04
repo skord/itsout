@@ -105,6 +105,10 @@ class Update
   validates_within :severity, :set => SEVERITIES
   validates_presence_of :title
   validates_presence_of :text
+  
+  def open?
+    self.maintenance_event.closed_at.nil?
+  end
 
 end
 
