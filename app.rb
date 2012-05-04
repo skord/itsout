@@ -12,7 +12,7 @@ helpers do
   
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == ['admin', 'admin']
+    @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['ADMIN_USER'], ENV['ADMIN_PASSWORD']]
   end
 
   def severity_classes(severity)
@@ -77,6 +77,21 @@ get '/maintenance_events/:id/open' do
     redirect to('/maintenance_events')
   end
 end
+
+post '/maintenance_events/:id/updates/new' do
+  protected!
+  @maintenance_event = MaintenanceEvent.get(params[:id])
+  @update = @maintenance_event.updates.create(params[:update])
+  if @maintenance_event.save
+    flash[:notice] = "Live Update Created"
+    redirect to('/maintenance_events')
+  else
+    flash[:notice] = "Couldn't Create Live Update"
+    redirect to('/maintenance_events')
+  end
+end
+
+
 
 get '/log' do
   protected!

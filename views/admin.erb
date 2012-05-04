@@ -40,13 +40,13 @@
 							</td>
 							<td>
 								<% if me.closed_at.nil? %>
-									<a href="/maintenance_events/<%= me.id %>/close" class='btn btn-danger'>Close Issue</a>
+									<a href="/maintenance_events/<%= me.id %>/close" class='btn btn-danger'>Stop Timer</a>
 								<% else %>
-									<a href="/maintenance_events/<%= me.id %>/open" class='btn btn-info'>Re-open Issue</a>
+									<a href="/maintenance_events/<%= me.id %>/open" class='btn btn-info'>Clear Timer</a>
 								<% end %>
 							</td>
 							<td>
-								<a class="btn" data-toggle="modal" href="#myModal" >New Live Update</a>
+								<a class="btn" data-toggle="modal" href="#myModal-<%= me.id %>" >New Live Update</a>
 							</td>
 						</tr>
 					<% end %>
@@ -72,9 +72,40 @@
 	</div>
 </div>
 
+<% @maintenance_events.each do |maintenance_event| %>
+	<div class="modal hide" id="myModal-<%= maintenance_event.id %>">
+		<div class="modal-header">
+			<button class="close" data-dismiss="modal">×</button>
+			<h3>Status Update for <%= maintenance_event.title %></h3>
+		</div>
+		<div class="modal-body">
+			<form action='/maintenance_events/<%= maintenance_event.id %>/updates/new' method="POST">
+				<fieldset>
+					<div class='control-group'>
+						<input class='input-xlarge' type='text' placeholder='Update Title' name="update[title]"></input>
+					</div>
+					<div class='control-group'>
+						<textarea class='input-xlarge' rows='10' placeholder='Be descriptive about the problem...' name="update[text]"></textarea>
+					</div>
+					<div class='control-group'>
+						<label>Severity</label>
+						<select name="update[severity]">
+							<option>major</option>
+							<option>minor</option>
+							<option>good</option>
+							<option>info</option>
+						</select>
+					</div>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="btn" data-dismiss="modal">Close</a>
+			<button class='btn btn-primary' type='submit'>Save Changes</button>
+		</div>
+			</fieldset>
+		</form>
+		
+	</div>
+<% end %>
 
 
-
-
-<a href='/' class='btn'>To Site Home</a>
-<%= erb :update_form %>
+<a href='/' class='btn'><i class='icon-arrow-left'></i> To Site Home</a>
