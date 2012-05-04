@@ -125,7 +125,7 @@ end
 
 def broadcast(update_id)
   update = Update.get(update_id)
-  update_message = {:channel => '/messages/new', :data => "$.get('/update/#{update.id}', function(data){ $('#updates').prepend(data);})"}
+  update_message = {:channel => '/messages/new', :data => "$.get('/update/#{update.id}', function(data){ $('#updates').prepend(data);$('#update-#{update.id}').fadeOut().fadeIn().fadeOut().fadeIn();});"}
   uri = URI.parse("http://localhost:9001/faye")
   Net::HTTP.post_form(uri, :message => update_message.to_json)
 end
