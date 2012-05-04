@@ -1,4 +1,9 @@
-<div class='<%= severity_classes(update.severity) %> <%= "closed" unless update.open? %>'>
+<script type="text/javascript" charset="utf-8">
+	jQuery(document).ready(function() {
+	  jQuery("time.timeago").timeago();
+	});
+</script>
+<div id='update-<%= update.id %>'class='<%= severity_classes(update.severity) %> <%= "closed" unless update.open? %>'>
 	<h3><%= update.maintenance_event.title %> - <%= update.title %></h3>
 	<i><%= nicetime(update.created_at) %> - <%= timeago(update.created_at) %></i>
 	<p><%= update.text %></p>

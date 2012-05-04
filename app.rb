@@ -1,4 +1,5 @@
 Bundler.require
+require 'json'
 
 enable :sessions
 
@@ -13,6 +14,14 @@ helpers do
   def authorized?
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['ADMIN_USER'], ENV['ADMIN_PASSWORD']]
+  end
+
+  def faye_path
+    "#{request.scheme}://#{request.host}:9001/faye"
+  end
+  
+  def faye_js_path
+    faye_path + '.js'
   end
 
   def severity_classes(severity)
@@ -32,6 +41,11 @@ get '/' do
   @maintenance_events = MaintenanceEvent.all(:order => [:created_at.desc])
   @updates = Update.all(:order => [:created_at.desc])
   erb :index
+end
+
+get '/update/:id' do 
+  @update = Update.get(params[:id])
+  erb :update, :layout => false, :locals => {:update => @update}
 end
 
 get '/maintenance_events' do
@@ -82,16 +96,15 @@ post '/maintenance_events/:id/updates/new' do
   protected!
   @maintenance_event = MaintenanceEvent.get(params[:id])
   @update = @maintenance_event.updates.create(params[:update])
-  if @maintenance_event.save
+  if @update.save
     flash[:notice] = "Live Update Created"
+    broadcast(@update.id)
     redirect to('/maintenance_events')
   else
     flash[:notice] = "Couldn't Create Live Update"
     redirect to('/maintenance_events')
   end
 end
-
-
 
 get '/log' do
   protected!
@@ -100,6 +113,21 @@ end
 
 def title
   'Site Maintenance'
+end
+
+def escape_javascript(html_content)
+  return '' unless html_content
+  javascript_mapping = { '\\' => '\\\\', '</' => '<\/', "\r\n" => '\n', "\n" => '\n' }
+  javascript_mapping.merge("\r" => '\n', '"' => '\\"', "'" => "\\'")
+  escaped_string = html_content.gsub(/(\\|<\/|\r\n|[\n\r"'])/) { javascript_mapping[$1] }
+  "\"#{escaped_string}\""
+end
+
+def broadcast(update_id)
+  update = Update.get(update_id)
+  update_message = {:channel => '/messages/new', :data => "$.get('/update/#{update.id}', function(data){ $('#updates').prepend(data);})"}
+  uri = URI.parse("http://localhost:9001/faye")
+  Net::HTTP.post_form(uri, :message => update_message.to_json)
 end
 
 DataMapper.setup(:default, 'sqlite:project.db')
