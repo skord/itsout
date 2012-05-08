@@ -2,6 +2,7 @@ Bundler.require
 require 'json'
 
 enable :sessions
+set :public_folder, File.dirname(__FILE__) + '/static'
 
 helpers do
   def protected!
