@@ -49,61 +49,61 @@ get '/update/:id' do
   erb :update, :layout => false, :locals => {:update => @update}
 end
 
-get '/maintenance_events' do
+get '/admin' do
   protected!
   @maintenance_events = MaintenanceEvent.all(:order => [:created_at.desc]) 
   erb :admin
 end
 
-post '/maintenance_events' do
+post '/admin' do
  protected!
  @maintenance_event =  MaintenanceEvent.new(params[:maintenance_event])
  if @maintenance_event.save
   flash[:notice] = "Save Successful"
-  redirect to('/maintenance_events')
+  redirect to('/admin')
  else
   flash[:notice] = "You had an error in your form, try again."
-  redirect to('/maintenance_events')
+  redirect to('/admin')
  end
 end
 
-get '/maintenance_events/:id/close' do
+get '/admin/:id/close' do
   protected!
   @maintenance_event = MaintenanceEvent.get(params[:id])
   @maintenance_event.closed_at = Time.now
   if @maintenance_event.save
     flash[:notice] = "Issue closed"
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   else
     flash[:notice] = "Couldn't close the issue"
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   end
 end
 
-get '/maintenance_events/:id/open' do
+get '/admin/:id/open' do
   protected!
   @maintenance_event = MaintenanceEvent.get(params[:id])
   @maintenance_event.closed_at = nil
   if @maintenance_event.save
     flash[:notice] = "Issue re-opened!"
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   else
     flash[:notice] = "Couldn't re-open the issue"
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   end
 end
 
-post '/maintenance_events/:id/updates/new' do
+post '/admin/:id/updates/new' do
   protected!
   @maintenance_event = MaintenanceEvent.get(params[:id])
   @update = @maintenance_event.updates.create(params[:update])
   if @update.save
     flash[:notice] = "Live Update Created"
     broadcast(@update.id)
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   else
     flash[:notice] = "Couldn't Create Live Update"
-    redirect to('/maintenance_events')
+    redirect to('/admin')
   end
 end
 

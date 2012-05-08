@@ -55,7 +55,7 @@
 		</div>
 		<div class="tab-pane" id="tab2">
 			<h1>New Maintenance Event</h1>
-			<form class='well' action='/maintenance_events' method='POST'>
+			<form class='well' action='/admin' method='POST'>
 				<fieldset>
 					<div class='control-group'>
 						<input class='input-xlarge' type='text' placeholder='Event Title' name="maintenance_event[title]"></input>
@@ -79,7 +79,7 @@
 			<h3>Status Update for <%= maintenance_event.title %></h3>
 		</div>
 		<div class="modal-body">
-			<form action='/maintenance_events/<%= maintenance_event.id %>/updates/new' method="POST">
+			<form action='/admin/<%= maintenance_event.id %>/updates/new' method="POST">
 				<fieldset>
 					<div class='control-group'>
 						<input class='input-xlarge' type='text' placeholder='Update Title' name="update[title]"></input>
