@@ -164,7 +164,7 @@ class MaintenanceEvent
   property :created_at, DateTime
   property :updated_at, DateTime
   property :closed_at, DateTime
-  has n, :updates
+  has n, :updates, :constraint => :destroy
   validates_presence_of :title
   validates_presence_of :text
 end
