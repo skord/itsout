@@ -10,6 +10,11 @@ So I had some simple apps that function as control panels for devices. Occasiona
 
 Provides push updates to maintenance issues. No need to refresh, thanks Faye. All the javascripts and CSS are put inline with rack-pagespeed so you have a monolitic document to avoid any static asset issues if you're proxying via nginx, etc.
 
+It's also mobile friendly taking advantage of bootstrap's fluid layouts. Here's a [video of a message being pushed to an iphone](http://skord.org/i/ffd1d86d.m4v)
+
+Also, screenshot 
+![What they see...](http://skord.org/i/273256c8.png)
+
 ## How the process of using this works.
 
 Note, the remote server needs to support SSH gateways.
